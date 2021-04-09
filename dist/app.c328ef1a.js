@@ -35688,6 +35688,10 @@ if (typeof window !== 'undefined') {
     window.__THREE__ = REVISION;
   }
 }
+},{}],"shaders/fragment.glsl":[function(require,module,exports) {
+module.exports = "#define GLSLIFY 1\nvoid main(){\n    gl_FragColor = vec4(1.,0.,0.,1.);\n}";
+},{}],"shaders/vertex.glsl":[function(require,module,exports) {
+module.exports = "#define GLSLIFY 1\nvarying vec2 vUv;\n\nvoid main() {\n  vUv = uv;\n  vec4 mvPosition = modelViewMatrix * vec4( position, 1. );\n  gl_PointSize = 50. * ( 1. / - mvPosition.z );\n  gl_Position = projectionMatrix * mvPosition;\n}";
 },{}],"app.js":[function(require,module,exports) {
 "use strict";
 
@@ -35697,6 +35701,12 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var THREE = _interopRequireWildcard(require("three"));
+
+var _fragment = _interopRequireDefault(require("./shaders/fragment.glsl"));
+
+var _vertex = _interopRequireDefault(require("./shaders/vertex.glsl"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -35732,7 +35742,11 @@ var Sketch = /*#__PURE__*/function () {
       this.material = new THREE.MeshNormalMaterial({
         side: THREE.DoubleSide
       });
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
+      this.material = new THREE.ShaderMaterial({
+        fragmentShader: _fragment.default,
+        vertexShader: _vertex.default
+      });
+      this.mesh = new THREE.Points(this.geometry, this.material);
       this.scene.add(this.mesh);
     }
   }, {
@@ -35741,7 +35755,6 @@ var Sketch = /*#__PURE__*/function () {
       this.time++;
       this.mesh.rotation.x += 0.01;
       this.mesh.rotation.y += 0.02;
-      console.log(this.time);
       this.renderer.render(this.scene, this.camera);
       window.requestAnimationFrame(this.render.bind(this));
     }
@@ -35752,7 +35765,7 @@ var Sketch = /*#__PURE__*/function () {
 
 exports.default = Sketch;
 new Sketch();
-},{"three":"node_modules/three/build/three.module.js"}],"../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"three":"node_modules/three/build/three.module.js","./shaders/fragment.glsl":"shaders/fragment.glsl","./shaders/vertex.glsl":"shaders/vertex.glsl"}],"../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
